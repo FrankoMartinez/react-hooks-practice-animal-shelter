@@ -7,6 +7,25 @@ function App() {
   const [pets, setPets] = useState([]);
   const [filters, setFilters] = useState({ type: "all" });
 
+  function handleChangeType(event) {
+    setFilters(event.target.value)
+  }
+
+  function handleFindPetsClick(searchedPet) {
+    console.log(pets)
+    if (searchedPet.type === "All") {
+      fetch("http://localhost:3001/pets")
+      .then(res => res.json())
+      .then(data => setPets(data))
+      return pets
+    } else {
+      fetch(`http://localhost:3001/pets/?type=${searchedPet.type}`)
+      .then(res => res.json())
+      .then(data => setPets(data))
+      return pets
+    }
+  }
+
   return (
     <div className="ui container">
       <header>
@@ -15,7 +34,7 @@ function App() {
       <div className="ui container">
         <div className="ui grid">
           <div className="four wide column">
-            <Filters />
+            <Filters onChangeType={handleChangeType} onFindPetsClick={handleFindPetsClick} />
           </div>
           <div className="twelve wide column">
             <PetBrowser />
