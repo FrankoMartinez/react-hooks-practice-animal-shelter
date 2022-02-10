@@ -7,23 +7,31 @@ function App() {
   const [pets, setPets] = useState([]);
   const [filters, setFilters] = useState({ type: "all" });
 
-  function handleChangeType(event) {
-    setFilters(event.target.value)
+  // Set filers to whatever value we select from the dropdown
+  function handleChangeType(type) {
+    setFilters({ type: type })
   }
 
-  function handleFindPetsClick(searchedPet) {
-    console.log(pets)
-    if (searchedPet.type === "All") {
-      fetch("http://localhost:3001/pets")
+  // Fetching from the api depending on what the filter value is
+  // Then sending pets to PetBrowser 
+  function handleFindPetsClick() {
+    if (filters.type !== "all") {
+      fetch(`http://localhost:3001/pets?type=${filters.type}`)
       .then(res => res.json())
       .then(data => setPets(data))
-      return pets
     } else {
-      fetch(`http://localhost:3001/pets/?type=${searchedPet.type}`)
+      fetch('http://localhost:3001/pets')
       .then(res => res.json())
       .then(data => setPets(data))
-      return pets
     }
+  }
+
+  // Handle adopt pet function
+  function handleAdoptPet(id) {
+   const updatedPets = pets.map((pet) => {
+     return pet.id === id ? {...pet, isAdopted: true } : pet;
+   })
+   setPets(updatedPets)
   }
 
   return (
@@ -37,7 +45,7 @@ function App() {
             <Filters onChangeType={handleChangeType} onFindPetsClick={handleFindPetsClick} />
           </div>
           <div className="twelve wide column">
-            <PetBrowser />
+            <PetBrowser pets={pets} onAdoptPet={handleAdoptPet} />
           </div>
         </div>
       </div>

@@ -1,6 +1,10 @@
 import React from "react";
 
 function Filters({ onChangeType, onFindPetsClick }) {
+  function handleOnChangeType(event) {
+    onChangeType(event.target.value)
+  }
+  
   return (
     <div className="ui form">
       <h3>Animal type</h3>
@@ -9,7 +13,7 @@ function Filters({ onChangeType, onFindPetsClick }) {
         name="type" 
         id="type" 
         aria-label="type"
-        onChange={onChangeType}
+        onChange={handleOnChangeType}
         >
           <option value="all">All</option>
           <option value="cat">Cats</option>
